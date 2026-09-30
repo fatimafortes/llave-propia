@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Renewal from './components/Renewal.jsx'
 import Agreement from './components/Agreement.jsx'
+import Witness from './components/Witness.jsx'
 
 // Navigation lives in memory only (no router, no URL state, no storage).
 const STEPS = [
@@ -56,21 +57,6 @@ function Home({ onOpen }) {
   )
 }
 
-// Placeholder until F5 replaces the monthly witness step.
-function ComingSoon({ step, onBack }) {
-  return (
-    <section className="panel">
-      <button type="button" className="back" onClick={onBack}>
-        ← Volver
-      </button>
-      <h2>
-        {step.number}. {step.title}
-      </h2>
-      <p className="muted">Esta sección está en construcción.</p>
-    </section>
-  )
-}
-
 export default function App() {
   const [current, setCurrent] = useState(null)
   const step = STEPS.find((s) => s.id === current)
@@ -82,8 +68,8 @@ export default function App() {
           <Renewal onBack={() => setCurrent(null)} />
         ) : step?.id === 'agreement' ? (
           <Agreement onBack={() => setCurrent(null)} />
-        ) : step ? (
-          <ComingSoon step={step} onBack={() => setCurrent(null)} />
+        ) : step?.id === 'witness' ? (
+          <Witness onBack={() => setCurrent(null)} />
         ) : (
           <Home onOpen={setCurrent} />
         )}
