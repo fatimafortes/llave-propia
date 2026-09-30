@@ -12,6 +12,12 @@ export const SOURCES = {
     url: 'https://wwwmat.sat.gob.mx/tramites/90298/solicitud-de-autorizacion-para-renovar-el-certificado-de-e.firma-a-traves-de-la-aplicacion-sat-id',
     reviewed: '30/09/2026',
   },
+  // Page reviewed 30/09/2026. The list's own date (SAT's "actualizada al") comes from public/data/69b.json.
+  list69b: {
+    label: 'SAT · Contribuyentes con operaciones presuntamente inexistentes (69-B)',
+    url: 'https://wwwmat.sat.gob.mx/consultas/76674/consulta-la-relacion-de-contribuyentes-con-operaciones-presuntamente-inexistentes',
+    reviewed: '30/09/2026',
+  },
 }
 
 export const LINKS = {

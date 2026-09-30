@@ -1,0 +1,17 @@
+{
+  "label": "Clientes de meses anteriores (ficticios)",
+  "note": "Datos inventados para la demo. En uso real, esta lista saldría de las facturas de meses anteriores.",
+  "rfcs": [
+    "XFAR850312KA1",
+    "XFLM790825PL3",
+    "XFSG920117QT2",
+    "XFJP680430MN7",
+    "XAF100215HD4",
+    "XFML880909RS5",
+    "XFIC800101AB1",
+    "XFRT750604BC8",
+    "XFEV990221DE9",
+    "XFPC810506TU4",
+    "XFGH930314VW6"
+  ]
+}

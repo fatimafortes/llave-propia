@@ -1,0 +1,13 @@
+fecha,hora,folio,rfc_receptor,nombre_receptor,total,concepto
+2026-09-01,10:15,FIC-0901,XFAR850312KA1,Paciente Ana R.,1450.00,Limpieza dental
+2026-09-03,12:40,FIC-0902,XFLM790825PL3,Paciente Luis M.,3200.00,Resina
+2026-09-05,09:30,FIC-0903,XFSG920117QT2,Paciente Sofía G.,950.00,Consulta
+2026-09-08,16:10,FIC-0904,XFJP680430MN7,Paciente Jorge P.,2100.00,Extracción
+2026-09-10,10:40,FIC-0905,XAF100215HD4,Aseguradora Fic.,38500.00,Ortodoncia (plan completo)
+2026-09-12,03:12,FIC-0906,XFML880909RS5,Paciente Marta L.,1200.00,Limpieza dental
+2026-09-14,13:20,FIC-0907,XFIC800101AB1,Comercializadora Delta Fic.,4200.00,Servicios dentales a empleados
+2026-09-16,18:45,FIC-0908,XFRT750604BC8,Paciente Ricardo T.,1800.00,Resina
+2026-09-19,10:00,FIC-0909,XFEV990221DE9,Paciente Elena V.,650.00,Consulta
+2026-09-22,17:05,FIC-0910,XCS150708FG2,Clínica Sonrisa Fic.,2800.00,Referencia de ortodoncia
+2026-09-25,12:30,FIC-0911,XFAR850312KA1,Paciente Ana R.,2600.00,Endodoncia
+2026-09-29,15:15,FIC-0912,XFLM790825PL3,Paciente Luis M.,1500.00,Blanqueamiento
