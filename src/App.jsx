@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Renewal from './components/Renewal.jsx'
+import Agreement from './components/Agreement.jsx'
 
 // Navigation lives in memory only (no router, no URL state, no storage).
 const STEPS = [
@@ -55,7 +56,7 @@ function Home({ onOpen }) {
   )
 }
 
-// Placeholder until F3–F5 replace the remaining steps.
+// Placeholder until F5 replaces the monthly witness step.
 function ComingSoon({ step, onBack }) {
   return (
     <section className="panel">
@@ -79,13 +80,15 @@ export default function App() {
       <main>
         {step?.id === 'renewal' ? (
           <Renewal onBack={() => setCurrent(null)} />
+        ) : step?.id === 'agreement' ? (
+          <Agreement onBack={() => setCurrent(null)} />
         ) : step ? (
           <ComingSoon step={step} onBack={() => setCurrent(null)} />
         ) : (
           <Home onOpen={setCurrent} />
         )}
       </main>
-      <footer className="footer">No guardamos nada. Al cerrar esta pestaña, todo se borra.</footer>
+      <footer className="footer no-print">No guardamos nada. Al cerrar esta pestaña, todo se borra.</footer>
     </div>
   )
 }

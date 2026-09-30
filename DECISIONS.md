@@ -19,4 +19,16 @@
 - **What to bring to the appointment:** confirmed appointment, valid official ID, USB (preferably new), a working email; plus proof of address only when expired > 1 year. Limit line tells her to check the appointment receipt, since SAT may ask for more.
 - **Links point to `wwwmat.sat.gob.mx`.** `www.sat.gob.mx/tramites/...` timed out from here on 30/09/2026 while `wwwmat` (SAT's own trámites host) answered 200.
 - **Routing is a pure function** (`src/lib/renewal.js`) with `node:test` tests (`npm test`), no test framework added.
-- **Tomorrow's first move:** check the F2 auto-deploy on a phone, then F3 (credentials agreement + print).
+- **Deploy #2 = first automatic deploy from GitHub.** Push of `aa4268a` (16:30:46) produced production deployment `dpl_BrvbCwPDBxwdT8sGkzxfeZq2Q5wo` at 16:30:53 with the `llave-propia-git-main-…` alias, which only git-triggered deploys get. No CLI deploy was run. From here on, every push to `main` deploys.
+- **Fifth question confirmed by Fátima:** a wrong route is worse than one extra click.
+
+## 2026-09-30 · F3 credentials agreement
+- **Every role is a partner, never the receptionist** (Condition 4). Custodian and backup are chosen only from the partners; clause 3 of the agreement says reception can use accounts but doesn't own the risk.
+- **Backup must be a different partner.** With a single partner there is no backup; the document says "Sin respaldo (solo hay un socio)" and asks to revisit it when a partner joins.
+- **Roles point to a stable partner id, not the name.** Bug found in testing: clearing a name to retype it silently dropped that partner's account roles. Ids fix it for good.
+- **Validation (rule 7):** nickname and "Otra" ≤ 80 chars; partner = first name(s) only, max two words, letters only, no duplicates; 1–6 partners; ≥ 1 account; rotation days whole number 1–30; records option required. Errors are shown in Spanish next to the field and focus jumps to the first one.
+- **`autoComplete="off"` on the form**, so the browser doesn't keep partner names in its autofill history.
+- **Clause 1 keeps each e.firma personal**, including from the contador: the contador works with the CIEC, never the .key (PACKET §5b).
+- **NOM-004 is only flagged**, under the patient-records clause, as out of scope.
+- **Print:** `window.print()`; print CSS hides the back link, title, buttons and footer. Signatures are kept together so no name ends up alone on a page. 1, 4 and 6 partners each print on one Letter page.
+- **Tomorrow's first move:** check F3 on a phone (fill + print to PDF), then F4 (fictional invoices + 69-B snapshot script), starting by verifying the 69-B download link on sat.gob.mx.

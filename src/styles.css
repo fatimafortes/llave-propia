@@ -263,3 +263,280 @@ main {
   margin-top: 16px;
   padding: 0 18px;
 }
+
+/* F3 — credentials agreement */
+.agreement-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.hint {
+  clear: both;
+  color: var(--muted);
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.agreement-form input[type='text'],
+.agreement-form select {
+  width: 100%;
+  font: inherit;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid #b9c3d1;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.agreement-form input.days {
+  width: 96px;
+}
+
+.agreement-form [aria-invalid='true'] {
+  border-color: var(--red);
+  outline: 1px solid var(--red);
+}
+
+.agreement-form input:focus-visible,
+.agreement-form select:focus-visible,
+.check input:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 1px;
+}
+
+.field-error {
+  color: var(--red);
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.error-summary {
+  background: #fdecec;
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.partner-list,
+.account-list,
+.radio-list {
+  clear: both;
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.partner-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.secondary.small {
+  margin-top: 0;
+  min-height: 48px;
+  padding: 0 12px;
+}
+
+.account {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 4px 12px;
+}
+
+.account.selected {
+  border-color: var(--blue);
+  padding-bottom: 12px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  cursor: pointer;
+}
+
+.check input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--blue);
+  flex: none;
+}
+
+.account-roles {
+  display: grid;
+  gap: 10px;
+}
+
+.select-label {
+  display: grid;
+  gap: 4px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.primary {
+  font: inherit;
+  font-weight: 700;
+  min-height: 52px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 12px;
+  background: var(--blue);
+  color: #fff;
+  cursor: pointer;
+}
+
+.primary:hover {
+  background: var(--blue-dark);
+}
+
+.primary:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0 20px;
+}
+
+.actions .secondary {
+  margin-top: 0;
+}
+
+.agreement-doc {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  font-size: 16px;
+}
+
+.agreement-doc h3 {
+  font-size: 22px;
+}
+
+.agreement-doc header p {
+  color: var(--muted);
+}
+
+.clauses {
+  margin-top: 16px;
+  padding-left: 22px;
+  display: grid;
+  gap: 12px;
+}
+
+.agreement-doc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.agreement-doc th,
+.agreement-doc td {
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 6px;
+  vertical-align: top;
+}
+
+.doc-note {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.signatures {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 32px 24px;
+  margin-top: 40px;
+}
+
+.sign-line {
+  border-bottom: 1px solid var(--ink);
+  height: 48px;
+  margin-bottom: 6px;
+}
+
+.doc-footer {
+  margin-top: 32px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+@media print {
+  @page {
+    margin: 18mm;
+  }
+
+  body {
+    background: #fff;
+    font-size: 11pt;
+  }
+
+  .app {
+    max-width: none;
+    padding: 0;
+    min-height: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .agreement-doc {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    font-size: 11pt;
+  }
+
+  .agreement-doc header p,
+  .doc-note,
+  .doc-footer {
+    color: #333;
+  }
+
+  .clauses {
+    gap: 8px;
+  }
+
+  .agreement-doc th,
+  .agreement-doc td {
+    padding: 5px 6px;
+  }
+
+  .signatures {
+    margin-top: 24px;
+    gap: 20px 24px;
+  }
+
+  .sign-line {
+    height: 36px;
+  }
+
+  /* Signatures stay together (and with the closing note), never one name alone on a page. */
+  .agreement-doc table,
+  .clauses li,
+  .signatures,
+  .doc-footer {
+    break-inside: avoid;
+  }
+}
