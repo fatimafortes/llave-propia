@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Renewal from './components/Renewal.jsx'
 
 // Navigation lives in memory only (no router, no URL state, no storage).
 const STEPS = [
@@ -54,7 +55,7 @@ function Home({ onOpen }) {
   )
 }
 
-// Placeholder until F2–F5 replace each step.
+// Placeholder until F3–F5 replace the remaining steps.
 function ComingSoon({ step, onBack }) {
   return (
     <section className="panel">
@@ -76,7 +77,9 @@ export default function App() {
   return (
     <div className="app">
       <main>
-        {step ? (
+        {step?.id === 'renewal' ? (
+          <Renewal onBack={() => setCurrent(null)} />
+        ) : step ? (
           <ComingSoon step={step} onBack={() => setCurrent(null)} />
         ) : (
           <Home onOpen={setCurrent} />
