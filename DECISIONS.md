@@ -113,3 +113,10 @@ Problems in my own test scripts (not the app) are not listed. They were fixed in
 - **Done today:** F1–F7, 13 commits, every push auto-deployed to https://llave-propia.vercel.app. T1–T11 pass on the live site; 52 unit tests pass. README and DECISIONS written. The quota fix is deployed and verified with **zero** real Gemini calls (log count after the push: 0).
 - **State tonight:** the Gemini daily quota is used up until 01:00 Mexico City time. Until then the card shows the "límite de hoy" message; everything else works.
 - **Tomorrow's first move:** test "Explícamelo simple" once on my phone, then the persona test and the demo video.
+
+## 2026-10-01 · "Explícamelo simple" check on Fátima's phone
+- **First two taps failed (10:58:10 and 10:58:32, Mexico City):** the Vercel logs show `Gemini HTTP 503, retrying once` and then `Gemini HTTP 503 UNAVAILABLE` on the retry, so the function returned 502 and the card said "No se pudo generar la explicación." It was **not the quota** (no 429 / RESOURCE_EXHAUSTED; the daily quota had reset) and **not the key** (no 400/403). Gemini was briefly overloaded.
+- **Third tap worked (11:01:45):** the first Gemini answer was again a 503, the single retry succeeded, and the function returned 200. The retry added on 30/09 is what saved it.
+- **Diagnosed from the new log lines only**, with no test calls to the real Gemini.
+- **No code change.** Falling back to a second model (`gemini-3.5-flash`) plus a "servicio saturado" message stays a possible later fix; Fátima decided it isn't needed for the demo. The card works without the AI either way.
+- **Next move:** record the demo video while the explanation is cached, then the persona test.
