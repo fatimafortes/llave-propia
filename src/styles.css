@@ -795,3 +795,75 @@ main {
   font-size: 12px;
   line-height: 1.25;
 }
+
+/* F6 — next-action card */
+.next-card {
+  margin-top: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--blue);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.next-card h3 {
+  font-size: 18px;
+}
+
+.next-card a {
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.meanings {
+  margin: 6px 0 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+  font-size: 16px;
+}
+
+.link-button {
+  font: inherit;
+  font-weight: 600;
+  color: var(--blue);
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 8px;
+  min-height: 44px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link-button:focus-visible,
+.next-card a:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.secondary.explain {
+  margin-top: 12px;
+}
+
+.ai {
+  margin-top: 12px;
+  background: #eef1f5;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.ai-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #3b4656;
+  background: #dde2ea;
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+
+.ai p {
+  margin-top: 6px;
+  font-size: 16px;
+}

@@ -13,6 +13,7 @@ import {
 } from '../lib/witness.js'
 import { SOURCES } from '../data/sources.js'
 import SourceLine from './SourceLine.jsx'
+import NextAction from './NextAction.jsx'
 
 const SHORT_MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
 const money = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' })
@@ -83,6 +84,7 @@ function InvoiceRow({ row, index, mark, onMark, snapshotDate }) {
           </button>
         ))}
       </div>
+      <NextAction row={row} mark={mark} />
     </li>
   )
 }

@@ -18,6 +18,12 @@ export const SOURCES = {
     url: 'https://wwwmat.sat.gob.mx/consultas/76674/consulta-la-relacion-de-contribuyentes-con-operaciones-presuntamente-inexistentes',
     reviewed: '30/09/2026',
   },
+  // No login needed; also lists MarcaSAT 55 627 22 728 and denuncias@sat.gob.mx.
+  denuncia: {
+    label: 'SAT · Presenta tu queja o denuncia',
+    url: 'https://wwwmat.sat.gob.mx/aplicacion/50409/presenta-tu-queja-o-denuncia',
+    reviewed: '30/09/2026',
+  },
 }
 
 export const LINKS = {
@@ -26,4 +32,6 @@ export const LINKS = {
     'https://wwwmat.sat.gob.mx/aplicacion/16660/genera-y-descarga-tus-archivos-a-traves-de-la-aplicacion-certifica',
   satId: 'https://satid.sat.gob.mx/',
   citas: 'https://citas.sat.gob.mx/',
+  facturas: 'https://portalcfdi.facturaelectronica.sat.gob.mx/',
+  denuncia: 'https://wwwmat.sat.gob.mx/aplicacion/50409/presenta-tu-queja-o-denuncia',
 }
