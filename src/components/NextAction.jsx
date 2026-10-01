@@ -13,6 +13,7 @@ async function fetchExplanation(flag) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ flag }),
   })
+  if (res.status === 429) throw new Error('quota')
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const data = await res.json()
   if (typeof data.text !== 'string' || !data.text.trim()) throw new Error('empty')
@@ -35,8 +36,8 @@ function Card({ row, reasons }) {
     setAi({ state: 'loading', text: '' })
     try {
       setAi({ state: 'done', text: await fetchExplanation(primary) })
-    } catch {
-      setAi({ state: 'error', text: '' })
+    } catch (error) {
+      setAi({ state: error.message === 'quota' ? 'quota' : 'error', text: '' })
     }
   }
 
@@ -79,6 +80,11 @@ function Card({ row, reasons }) {
       {ai.state === 'error' && (
         <p className="field-error" role="alert">
           No se pudo generar la explicación.
+        </p>
+      )}
+      {ai.state === 'quota' && (
+        <p className="field-error" role="alert">
+          La explicación con IA llegó a su límite de hoy. La tarjeta de arriba tiene los pasos.
         </p>
       )}
       {ai.state === 'done' && (

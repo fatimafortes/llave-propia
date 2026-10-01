@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { clampWords, createHandler, validFlag } from '../api/explain.js'
+import { clampWords, createHandler, errorReason, validFlag } from '../api/explain.js'
 import { EXPLAIN_FLAGS, MEANINGS, cardMode, reasonsFor } from '../src/data/nextActions.js'
 
 // Minimal stand-ins for Vercel's req/res.
@@ -61,7 +61,7 @@ test('rejects: GET, extra keys, unknown flag, bad JSON, big body — without cal
 test('errors -> Spanish message, never a stack or the key', async () => {
   const cases = [
     createHandler({ getKey: () => '' }),
-    createHandler({ getKey: () => 'secret-key', fetchImpl: async () => ({ ok: false, status: 429 }) }),
+    createHandler({ getKey: () => 'secret-key', fetchImpl: async () => ({ ok: false, status: 500 }) }),
     createHandler({ getKey: () => 'secret-key', fetchImpl: async () => { throw new Error('secret-key timeout') } }),
     createHandler({ getKey: () => 'secret-key', fetchImpl: geminiReply('   ') }),
   ]
@@ -124,6 +124,42 @@ test('one retry on a Gemini 5xx; no retry on 429', async () => {
 
   let quotaCalls = 0
   const quota = createHandler({ getKey: () => 'k', fetchImpl: async () => { quotaCalls++; return { ok: false, status: 429 } } })
-  assert.equal((await call(quota, { body: { flag: 'ODD_HOUR' } })).status, 502)
+  assert.equal((await call(quota, { body: { flag: 'ODD_HOUR' } })).status, 429)
   assert.equal(quotaCalls, 1)
+})
+
+// Shape of Google's 429 body (RESOURCE_EXHAUSTED with QuotaFailure + RetryInfo details).
+const google429 = {
+  error: {
+    code: 429,
+    status: 'RESOURCE_EXHAUSTED',
+    message: 'You exceeded your current quota… key AIzaFAKE…',
+    details: [
+      { '@type': 'type.googleapis.com/google.rpc.QuotaFailure', violations: [{ quotaId: 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', quotaMetric: 'generate_content_free_tier_requests' }] },
+      { '@type': 'type.googleapis.com/google.rpc.RetryInfo', retryDelay: '3600s' },
+    ],
+  },
+}
+
+test('429 -> page gets { error: "quota" }; log names the quota but never the message or key', async () => {
+  const logged = []
+  const original = console.error
+  console.error = (m) => logged.push(m)
+  try {
+    const handler = createHandler({ getKey: () => 'secret-key', fetchImpl: async () => ({ ok: false, status: 429, json: async () => google429 }) })
+    const r = await call(handler, { body: { flag: '69B_MATCH' } })
+    assert.equal(r.status, 429)
+    assert.deepEqual(r.body, { error: 'quota' })
+  } finally {
+    console.error = original
+  }
+  assert.equal(logged.length, 1)
+  assert.equal(logged[0], '[explain] Gemini HTTP 429 RESOURCE_EXHAUSTED quota=GenerateRequestsPerDayPerProjectPerModel-FreeTier retry=3600s')
+  assert.doesNotMatch(logged[0], /AIza|secret-key|exceeded/)
+})
+
+test('errorReason survives a missing or odd error body', async () => {
+  assert.equal(await errorReason({ json: async () => { throw new Error('not json') } }), '(no error body)')
+  assert.equal(await errorReason({ json: async () => ({}) }), '')
+  assert.equal(await errorReason({ json: async () => ({ error: { status: 'UNAVAILABLE' } }) }), 'UNAVAILABLE')
 })

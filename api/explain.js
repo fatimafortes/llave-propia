@@ -48,6 +48,23 @@ export function clampWords(text, max = MAX_WORDS) {
   return out || words.slice(0, max).join(' ') + '…'
 }
 
+// Google's error type and quota name, e.g. "RESOURCE_EXHAUSTED quota=GenerateRequestsPerDay… retry=30s".
+// Only these fields are logged — never the request, the key or the full message.
+export async function errorReason(response) {
+  try {
+    const err = (await response.json())?.error ?? {}
+    const details = Array.isArray(err.details) ? err.details : []
+    const quota = details.flatMap((d) => d?.violations ?? []).map((v) => v?.quotaId).filter(Boolean)
+    const retry = details.find((d) => d?.retryDelay)?.retryDelay
+    const safe = (v) => String(v).replace(/[^\w.:/-]/g, '').slice(0, 120)
+    return [err.status && safe(err.status), quota.length && `quota=${quota.map(safe).join(',')}`, retry && `retry=${safe(retry)}`]
+      .filter(Boolean)
+      .join(' ')
+  } catch {
+    return '(no error body)'
+  }
+}
+
 function readBody(req) {
   const raw = req.body
   if (raw && typeof raw === 'object' && !Buffer.isBuffer(raw)) return raw
@@ -115,7 +132,9 @@ export function createHandler({ fetchImpl = fetch, getKey = () => process.env.GE
         r = await request()
       }
       if (!r.ok) {
-        console.error(`[explain] Gemini HTTP ${r.status}`)
+        console.error(`[explain] Gemini HTTP ${r.status} ${await errorReason(r)}`)
+        // Quota/rate limit: tell the page so it can say so plainly (the card still has the steps).
+        if (r.status === 429) return res.status(429).json({ error: 'quota' })
         return res.status(502).json({ error: 'No se pudo generar la explicación.' })
       }
       const data = await r.json()
