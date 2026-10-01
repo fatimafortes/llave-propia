@@ -121,9 +121,22 @@ export default function Witness({ onBack }) {
   const [busy, setBusy] = useState(false)
   const [marks, setMarks] = useState({})
 
-  // Start loading the 69-B list as soon as the screen opens; reuse the same promise.
+  // Reuse a successful load; forget a failed one so the next check tries again
+  // (a brief connection drop must not leave every later check "No se pudo revisar").
+  const getList = () => {
+    if (!listPromise.current) {
+      const pending = load69b()
+      listPromise.current = pending
+      pending.then((result) => {
+        if (!result.available && listPromise.current === pending) listPromise.current = null
+      })
+    }
+    return listPromise.current
+  }
+
+  // Start loading the 69-B list as soon as the screen opens.
   useEffect(() => {
-    listPromise.current = load69b()
+    getList()
   }, [])
 
   const start = async (loader) => {
@@ -158,7 +171,7 @@ export default function Witness({ onBack }) {
 
   const loadDemo = () =>
     start(async () => {
-      const [csvRes, list69b] = await Promise.all([fetch('/demo/facturas_ficticias.csv'), listPromise.current ?? load69b()])
+      const [csvRes, list69b] = await Promise.all([fetch('/demo/facturas_ficticias.csv'), getList()])
       if (!csvRes.ok) return { error: 'No se pudo cargar el ejemplo. Revisa tu conexión.' }
       const parsed = parseInvoices(await csvRes.text())
       if (!parsed.ok) return { error: parsed.error }
@@ -173,7 +186,7 @@ export default function Witness({ onBack }) {
       if (!decoded.ok) return { error: decoded.error }
       const parsed = parseInvoices(decoded.text)
       if (!parsed.ok) return { error: parsed.error }
-      const list69b = await (listPromise.current ?? load69b())
+      const list69b = await getList()
       if (isSampleData(parsed.invoices)) return withDemoContext(parsed.invoices, list69b)
       return { invoices: parsed.invoices, source: 'upload', known: null, knownLabel: '', list69b }
     })
