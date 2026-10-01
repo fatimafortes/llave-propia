@@ -199,7 +199,7 @@ export default function Witness({ onBack }) {
   const snapshotDate = listOk ? data.list69b.list.snapshotDate : null
 
   return (
-    <section className="panel">
+    <section className={isDemo ? 'panel has-banner' : 'panel'}>
       {isDemo && (
         <>
           <div className="demo-banner" role="note">

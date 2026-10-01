@@ -55,3 +55,4 @@
 - **Odd hour = 00:00–04:59.** Outlier = more than 3 × the file's median.
 - **The file never leaves the browser.** Checked in the end-to-end test: the only requests are same-origin GETs for the app, `69b.json` and the demo files. No POST, no upload.
 - **Tomorrow's first move:** check F5 on a phone, then F6 (next-action cards + `/api/explain` with Gemini). Needs Fátima's Gemini API key in Vercel env vars first.
+- **Sticky summary (Fátima's phone test):** while marking invoices further down, the summary scrolled out of view. It now sticks to the top (under the demo banner) instead of being duplicated at the bottom: one summary, always visible, about 80 px tall at 375 px.

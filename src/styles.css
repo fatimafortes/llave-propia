@@ -552,6 +552,7 @@ main {
   color: #fff;
   font-weight: 700;
   font-size: 14px;
+  line-height: 21px;
   letter-spacing: 0.08em;
   text-align: center;
   padding: 8px 16px;
@@ -762,4 +763,35 @@ main {
 .context a {
   color: var(--blue);
   font-weight: 600;
+}
+
+/* Summary stays visible while marking invoices further down (sits under the fixed demo banner). */
+.summary {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+  padding: 8px 0;
+  margin: 0 -4px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.has-banner .summary {
+  top: 37px; /* demo banner: 21px line + 2 × 8px padding */
+}
+
+.pill {
+  padding: 6px 2px;
+}
+
+.pill b {
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.pill span {
+  display: block;
+  font-size: 12px;
+  line-height: 1.25;
 }
