@@ -83,6 +83,7 @@
 | F6 AI | Gemini repeated the card's steps and ran past 80 words | First real Gemini call | Prompt asks for the meaning only |
 | F6 AI | Gemini 503 "overloaded" on about half the first calls | Preview function logs | One retry on 5xx; per-flag cache |
 | F7 witness | A single failed 69-B load stuck for the whole session | F7 test pass | Retry on next check |
+| F6 AI (live) | "Explícamelo simple" always failed: Gemini free-tier **daily** quota used up by our own testing (~30 calls) | **Fátima on her phone** + Vercel logs (`Gemini HTTP 429`, still failing 17 min later) | Log the quota name; clear "límite de hoy" message; tests fake Gemini |
 
 Problems in my own test scripts (not the app) are not listed. They were fixed in the scripts.
 
@@ -90,9 +91,25 @@ Problems in my own test scripts (not the app) are not listed. They were fixed in
 1. **#1** F1, by Vercel CLI (`llave-propia.vercel.app`), then GitHub connected.
 2. **#2** F2 `aa4268a`, the first automatic deploy from a GitHub push. Every push since deploys the same way (F3–F6 and the summary fix).
 3. **#3** `e489055`, the F7 bug fix.
+4. `92132bf`, the Gemini quota fix (after the session-close review).
 
 ## Open questions / next steps
 - **Real "Receptor nuevo":** let the contador also upload last month's file to build the known-clients list (option 2).
 - **Fresher 69-B data:** SAT's file is dated 31/12/2025. Re-run `npm run update-69b` monthly, and look for a newer official source.
 - **Persona test** with "Dra. Lupita" (separate fresh chat, as the packet plans) has not been run yet.
-- **Tomorrow's first move:** record the demo video, then run the persona test.
+
+## 2026-09-30 · Gemini daily quota (found after F7)
+- **Symptom:** on Fátima's phone, "Explícamelo simple" showed "No se pudo generar la explicación" every time.
+- **Cause, from the Vercel logs:** every `/api/explain` call on the current deployments, from 18:35 to 18:53, got `Gemini HTTP 429`. They kept failing 17 minutes apart, so it was not the per-minute limit; it was the free tier's **requests-per-day** limit. Not a key problem (that would be 400/403) and not a 503. Our own testing burned it: preview tests, retries, the live T7/T8 runs and the F7 pass, about 30 requests.
+- **Google's rules** (ai.google.dev rate-limits page, 30/09/2026): daily quotas reset at **midnight Pacific time (01:00 in Mexico City)**, and limits are **per project, not per key**, so a new key wouldn't help. Usage can be seen on AI Studio's rate-limit page.
+- **Fix (`92132bf`, no new features):**
+  - `/api/explain` logs Google's error type, quota name and retry delay, never the key or the message. Example: `Gemini HTTP 429 RESOURCE_EXHAUSTED quota=GenerateRequestsPerDay… retry=…`.
+  - It answers 429 `{ "error": "quota" }`, so the card says "La explicación con IA llegó a su límite de hoy. La tarjeta de arriba tiene los pasos." Other errors still say "No se pudo generar la explicación."
+  - The browser test scripts fake `/api/explain` by default; a real call needs `ALLOW_LIVE_GEMINI=1`.
+- **Not done (Fátima's call):** falling back to `gemini-3.5-flash` when the quota runs out.
+- **Testing rule from now on:** at most one deliberate real Gemini call per check, by hand, from the phone. Everything else uses a fake reply.
+
+## Session close · 2026-09-30
+- **Done today:** F1–F7, 13 commits, every push auto-deployed to https://llave-propia.vercel.app. T1–T11 pass on the live site; 52 unit tests pass. README and DECISIONS written. The quota fix is deployed and verified with **zero** real Gemini calls (log count after the push: 0).
+- **State tonight:** the Gemini daily quota is used up until 01:00 Mexico City time. Until then the card shows the "límite de hoy" message; everything else works.
+- **Tomorrow's first move:** test "Explícamelo simple" once on my phone, then the persona test and the demo video.
