@@ -64,6 +64,35 @@
 - **If Gemini fails:** "No se pudo generar la explicación." in the card; the hard-coded card stays.
 - **When the card shows:** open as soon as she marks "No la reconozco"; on flagged rows not yet recognized, behind a "¿Qué hago ahora?" button (four always-open cards in the demo would be noise); hidden once she marks "La reconozco", because she vouched for it. The AI explains the most serious reason on the row (69-B > not recognized > new recipient > amount > hour).
 - **Card steps, all SAT links checked 30/09/2026:** (1) talk to the contador today; (2) review issued invoices in SAT's CFDI portal `portalcfdi.facturaelectronica.sat.gob.mx`; (3) if she didn't issue it, file a complaint ("Presenta tu queja o denuncia", no login) or call MarcaSAT 55 627 22 728 (tap-to-call), and book a SAT appointment if someone may have her e.firma. Condition 3: a human route is named. The spec said "presenta aclaración"; "Presenta tu aclaración" needs a login and is about one's own tax situation, so the complaint route was the better fit. The SAT info pages for invoice lookup and e.firma revocation returned 404, so they're not linked.
-- **Key:** `GEMINI_API_KEY` is a Vercel Sensitive env var (Production + Preview). It's sent only as the `x-goog-api-key` header from the function; it's never logged (errors log only the status code) and never returned. The client bundle contains no key, no `generativelanguage` URL and no env var name (checked in `dist/` and in the repo).
+- **Key:** `GEMINI_API_KEY` is a Vercel Secret env var (Production + Preview). It's sent only as the `x-goog-api-key` header from the function; it's never logged (errors log only the status code) and never returned. The client bundle contains no key, no `generativelanguage` URL and no env var name (checked in `dist/` and in the repo).
 - **Tested on a Vercel preview before production**, to check the real call without touching the live site.
-- **Tomorrow's first move:** check F6 on a phone, then F7 (run T1–T11, fix one bug, deploy #3, README + DECISIONS).
+- **F6 checked by Fátima on her phone.** She agreed with the complaint route, leaving out the broken SAT links, and caching per flag.
+
+## 2026-09-30 · F7 hardening, deploy #3, docs
+- **Full T1–T11 pass on the live URL**, 375 px and desktop, real Gemini for T7/T8: all pass. The browser scripts live outside the repo (headless Chrome via `puppeteer-core`); `npm test` has 50 unit tests in the repo. T9 also checks IndexedDB, Cache Storage, service workers and `Set-Cookie` headers. T10 searches every commit for key-shaped strings, confirms no `.env` file is tracked and checks the live bundle.
+- **Bug found and fixed (`e489055`, deploy #3):** if `69b.json` failed to load once (e.g. a brief connection drop), the witness screen kept that failure for the whole session, so every later check said "No se pudo revisar la lista 69-B" until a reload. It was honest but useless. A failed load is now forgotten and the next check tries again; a successful load is still reused.
+- **No new features in F7** (as agreed).
+
+## Bugs found this week (and fixed)
+| Where | Bug | How it was found | Fix |
+|---|---|---|---|
+| F3 agreement | Clearing a partner's name to retype it silently dropped their account roles | Automated test | Roles point to a stable partner id |
+| F3 print | With 4 partners, one signature landed alone on page 2 | Looking at the printed PDF | Tighter print layout; signatures kept together |
+| F5 witness | Summary scrolled out of view while marking invoices further down | **Fátima on her phone** | Sticky summary under the banner |
+| F6 AI | The 80-word cut treated "e.firma" as a sentence end ("…tienen tu e.") | First real Gemini call | Split sentences only before a capital letter |
+| F6 AI | Gemini repeated the card's steps and ran past 80 words | First real Gemini call | Prompt asks for the meaning only |
+| F6 AI | Gemini 503 "overloaded" on about half the first calls | Preview function logs | One retry on 5xx; per-flag cache |
+| F7 witness | A single failed 69-B load stuck for the whole session | F7 test pass | Retry on next check |
+
+Problems in my own test scripts (not the app) are not listed. They were fixed in the scripts.
+
+## Deploys
+1. **#1** F1, by Vercel CLI (`llave-propia.vercel.app`), then GitHub connected.
+2. **#2** F2 `aa4268a`, the first automatic deploy from a GitHub push. Every push since deploys the same way (F3–F6 and the summary fix).
+3. **#3** `e489055`, the F7 bug fix.
+
+## Open questions / next steps
+- **Real "Receptor nuevo":** let the contador also upload last month's file to build the known-clients list (option 2).
+- **Fresher 69-B data:** SAT's file is dated 31/12/2025. Re-run `npm run update-69b` monthly, and look for a newer official source.
+- **Persona test** with "Dra. Lupita" (separate fresh chat, as the packet plans) has not been run yet.
+- **Tomorrow's first move:** record the demo video, then run the persona test.
