@@ -867,3 +867,22 @@ main {
   margin-top: 6px;
   font-size: 16px;
 }
+
+/* "Lo tiene mi contador / No sé" answer + copyable WhatsApp message */
+.choice.wide {
+  grid-column: 1 / -1;
+}
+
+.wa-message {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  background: #e7f6ec;
+  border: 1px solid #b8dfc5;
+  border-radius: 10px;
+  user-select: all;
+  -webkit-user-select: all;
+}
+
+.secondary.copy {
+  margin-top: 8px;
+}

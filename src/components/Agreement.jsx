@@ -267,7 +267,8 @@ function AgreementDocument({ doc }) {
       <ol className="clauses">
         <li>
           <strong>Cada quien guarda su propia e.firma.</strong> Cada socio guarda su .cer, su .key y su
-          contraseña. No se comparten con nadie: ni entre socios, ni con el contador, ni con la recepción.
+          contraseña en su propio dispositivo. Son su firma legal, así que cada quien conserva la suya; si el
+          contador necesita algo firmado, lo platican en ese momento.
         </li>
         <li>
           <strong>Cuentas compartidas.</strong> Quien la cuida cambia la contraseña y decide quién la usa. El

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { FOLLOW_UP, QUESTIONS, ROUTES, getRoute, needsFollowUp } from '../lib/renewal.js'
+import { FOLLOW_UP, QUESTIONS, ROUTES, WITH_CONTADOR, contadorMessage, getRoute, needsFollowUp } from '../lib/renewal.js'
 import { LINKS, SOURCES } from '../data/sources.js'
 import SourceLine from './SourceLine.jsx'
 
@@ -12,18 +12,20 @@ function ExternalLink({ href, children }) {
 }
 
 function YesNo({ question, value, onChange }) {
+  const options = [
+    [true, 'Sí'],
+    [false, 'No'],
+  ]
+  if (question.contadorOption) options.push([WITH_CONTADOR, 'Lo tiene mi contador / No sé'])
   return (
     <fieldset className="question">
       <legend>{question.text}</legend>
       <div className="yesno">
-        {[
-          [true, 'Sí'],
-          [false, 'No'],
-        ].map(([answer, label]) => (
+        {options.map(([answer, label]) => (
           <button
             key={label}
             type="button"
-            className={value === answer ? 'choice selected' : 'choice'}
+            className={['choice', answer === WITH_CONTADOR && 'wide', value === answer && 'selected'].filter(Boolean).join(' ')}
             aria-pressed={value === answer}
             onClick={() => onChange(answer)}
           >
@@ -38,8 +40,8 @@ function YesNo({ question, value, onChange }) {
 function CertisatResult() {
   return (
     <>
-      <h3>Renueva hoy en CertiSAT Web, desde tu propio dispositivo, sin avisar a nadie antes</h3>
-      <p className="muted">Así la nueva llave y su contraseña solo las tienes tú.</p>
+      <h3>Renueva hoy en CertiSAT Web, tú misma, desde tu propio dispositivo</h3>
+      <p className="muted">Así la nueva llave y su contraseña quedan contigo.</p>
       <ol className="steps">
         <li>
           Descarga <ExternalLink href={LINKS.certifica}>Certifica</ExternalLink> y genera tu archivo de
@@ -77,6 +79,48 @@ function SatIdResult() {
         </li>
       </ol>
       <SourceLine source={SOURCES.satId} limit="Solo para personas mayores de edad. Espera la respuesta del SAT antes del paso 2." />
+    </>
+  )
+}
+
+function AskContadorResult({ answers }) {
+  const message = contadorMessage(answers)
+  const [copied, setCopied] = useState('')
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(message)
+      setCopied('Mensaje copiado. Pégalo en WhatsApp.')
+    } catch {
+      setCopied('Mantén presionado el mensaje para copiarlo.')
+    }
+  }
+  return (
+    <>
+      <h3>Pídele a tu contador que te devuelva tus archivos</h3>
+      <p className="muted">
+        Es muy común que el contador los guarde. Él puede seguir llevando tu contabilidad; la e.firma es tu firma
+        legal y conviene que también la tengas tú.
+      </p>
+      <ol className="steps">
+        <li>
+          Escríbele a tu contador. Puedes copiar este mensaje:
+          <p className="wa-message">{message}</p>
+          <button type="button" className="secondary copy" onClick={copy}>
+            Copiar mensaje
+          </button>
+          {copied && (
+            <p className="hint" role="status">
+              {copied}
+            </p>
+          )}
+        </li>
+        <li>Guarda los archivos en tu propio dispositivo, en una carpeta solo tuya.</li>
+        <li>
+          Después renueva tú misma: vuelve aquí, contesta «Sí» y te mostramos tu ruta. Al renovar eliges una
+          contraseña nueva que solo tú sabes.
+        </li>
+      </ol>
+      <SourceLine source={SOURCES.renewal} limit="Si tu contador ya no los tiene o ninguno recuerda la contraseña, necesitas cita en el SAT." />
     </>
   )
 }
@@ -126,7 +170,7 @@ export default function Renewal({ onBack }) {
         ← Volver
       </button>
       <h2>1. ¿Puedes renovar hoy?</h2>
-      <p className="muted">Contesta sí o no. No te pedimos ningún archivo ni contraseña.</p>
+      <p className="muted">Contesta lo que sepas. No te pedimos ningún archivo ni contraseña.</p>
 
       <div className="questions">
         {QUESTIONS.map((q) => (
@@ -142,6 +186,7 @@ export default function Renewal({ onBack }) {
           {route === ROUTES.CERTISAT && <CertisatResult />}
           {route === ROUTES.SAT_ID && <SatIdResult />}
           {route === ROUTES.APPOINTMENT && <AppointmentResult answers={answers} />}
+          {route === ROUTES.ASK_CONTADOR && <AskContadorResult answers={answers} />}
           <button type="button" className="secondary" onClick={() => setAnswers({})}>
             Empezar de nuevo
           </button>

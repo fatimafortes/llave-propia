@@ -9,7 +9,7 @@ const STEPS = [
     id: 'renewal',
     number: 1,
     title: '¿Puedes renovar hoy?',
-    blurb: '4 preguntas de sí o no. Te decimos si renuevas tu e.firma en línea o si necesitas cita en el SAT.',
+    blurb: '4 preguntas cortas. Te decimos si renuevas tu e.firma en línea o si necesitas cita en el SAT.',
   },
   {
     id: 'agreement',
