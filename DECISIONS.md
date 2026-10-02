@@ -120,3 +120,20 @@ Problems in my own test scripts (not the app) are not listed. They were fixed in
 - **Diagnosed from the new log lines only**, with no test calls to the real Gemini.
 - **No code change.** Falling back to a second model (`gemini-3.5-flash`) plus a "servicio saturado" message stays a possible later fix; Fátima decided it isn't needed for the demo. The card works without the AI either way.
 - **Next move:** record the demo video while the explanation is cached, then the persona test.
+
+## 2026-10-01 · Persona test (Dra. Lupita) and fix
+- **Persona:** Dra. Lupita, 52, co-owner of a shared practice, 5 minutes between patients, her contador holds her e.firma. Run by Fátima in a separate chat.
+- **Worst confusion (ranked #1 and #3 by the persona):** the most common real case, "mi contador tiene mis archivos", had no answer. The questions were only sí/no, so she guessed. Meanwhile the link comes from the contador, and the app said "ni con el contador" and "renueva sin avisar a nadie", which read as "don't trust Toño". **Outcome:** she asked her contador to renew *for her*, with her password. That's the opposite of what the app wants, and against Condition 4.
+- **Fix (`8ede5d8`, no other new features):**
+  - The .cer, .key and password questions add a third answer, **"Lo tiene mi contador / No sé"**. Vigencia stays sí/no.
+  - Any of those answers leads to a new result, **"Pídele a tu contador que te devuelva tus archivos"**:
+    - one neutral line: the contador can keep doing her accounting; the e.firma is her legal signature, so she should have it too;
+    - 3 steps: (1) a friendly message to copy for WhatsApp, "Hola, ¿me puedes mandar mis archivos de la e.firma (.cer y .key)? Los quiero tener yo también. ¡Gracias!" (it also asks for the contraseña if that's with the contador too), with a "Copiar mensaje" button; (2) save them on her own device; (3) "después renueva tú misma", coming back to get the existing route, with a new contraseña only she knows;
+    - source, date and the limit "si tu contador ya no los tiene o ninguno recuerda la contraseña, necesitas cita en el SAT".
+  - **A "No" still wins over "contador"** and goes to the SAT appointment: with a file or password truly lost, getting the rest back doesn't allow online renewal.
+  - **Wording softened, rule kept:** "Renueva hoy en CertiSAT Web, tú misma, desde tu propio dispositivo" (was "…sin avisar a nadie antes"). Agreement clause 1 now says each partner keeps their own .cer, .key and password on their own device, "son su firma legal", and if the contador needs something signed "lo platican en ese momento" (was "no se comparten con nadie: ni entre socios, ni con el contador, ni con la recepción"). Also "Contesta lo que sepas" and "4 preguntas cortas" instead of "sí o no".
+- **Two persona claims checked before changing anything. Neither was real:**
+  - (a) "No, No, No, Sí gave *renueva hoy*": false. On the live site, every tap from the first "No" shows "Necesitas cita en el SAT" and the follow-up never appears. Most likely the persona was looking at a screenshot from an all-"sí" run. **Routing unchanged**; a unit test and a browser test now cover exactly this sequence.
+  - (b) "Tapping *¿Qué hago ahora?* auto-selected *No la reconozco*": not reproduced. After tapping it on all 4 flagged invoices by touch, the summary stayed at 12 sin revisar and no invoice was marked. **Not changed.** Note: the link sits 8 px below the three mark buttons, so a real thumb could hit "No la reconozco" by mistake. Worth watching in a real test; not touched now.
+- **Checked on the live site (375 px and desktop):** new answer and result, copy button (clipboard holds exactly the message), "No" beats "contador", No/No/No/Sí → cita, softened texts, nothing stored, buttons ≥ 48 px. T1–T9 checks still pass. 0 real Gemini calls; 57 unit tests.
+- **Next move:** re-run the persona with the new path (does she now ask for her files back instead of handing over her password?), then record the demo.

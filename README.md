@@ -8,9 +8,10 @@ an old email thread, and nobody checks what gets signed with it. Llave Propia do
 security". It attaches a check to something that already happens every month, the contador's monthly
 close:
 
-1. **¿Puedes renovar hoy?** 4 yes/no questions (plus one follow-up) tell her whether she can renew her
+1. **¿Puedes renovar hoy?** 4 short questions (plus one follow-up) tell her whether she can renew her
    e.firma online today (CertiSAT Web, or SAT ID first if it expired less than a year ago) or needs a
-   SAT appointment, and what to bring. No file is ever uploaded.
+   SAT appointment, and what to bring. If her contador holds the files (or she doesn't know), it gives
+   her a friendly message to ask for them back, then the same routes. No file is ever uploaded.
 2. **Acuerdo de credenciales.** The partners decide who looks after each shared account (WhatsApp
    Business, practice software, Wi-Fi, email…) and who backs them up, always a partner and never the
    receptionist. It produces a printable agreement with signature lines.
